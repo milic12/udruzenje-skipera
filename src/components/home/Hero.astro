@@ -1,0 +1,28 @@
+---
+const features = [
+	{ title: 'Edukacija', text: 'Radionice i treninzi za usavršavanje skipera' },
+	{ title: 'Događaji', text: 'Razmjena znanja i iskustava među članovima' },
+	{ title: 'Članstvo', text: 'Podrška u primjeni sigurnosnih standarda' },
+];
+---
+
+<section class="bg-linear-135 from-light via-accent to-primary">
+	<div class="container-site py-20 text-center md:py-28">
+		<h1 class="mx-auto max-w-3xl text-4xl leading-tight font-semibold text-dark sm:text-5xl md:text-6xl">
+			Udruženje skipera Crne Gore
+		</h1>
+		<p class="mx-auto mt-6 max-w-xl text-lg text-dark/80">
+			Povezujemo profesionalce za sigurnost i edukaciju na moru
+		</p>
+		<a href="/kontakt" class="btn mt-8">Pridruži se</a>
+
+		<ul class="mt-16 grid gap-8 text-left sm:grid-cols-3">
+			{features.map((f) => (
+				<li class="rounded-xl bg-white/80 p-6 shadow-sm backdrop-blur">
+					<h6 class="text-lg font-semibold text-dark">{f.title}</h6>
+					<p class="mt-2 text-muted">{f.text}</p>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>

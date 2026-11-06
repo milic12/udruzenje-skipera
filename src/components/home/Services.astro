@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import crew from '../../assets/images/service-crew.jpg';
+import meetup from '../../assets/images/service-meetup.jpg';
+
+const services = [
+	{
+		image: crew,
+		title: 'Događaji',
+		text: 'Organizujemo druženja i razmjenu iskustava među članovima.',
+	},
+	{
+		image: meetup,
+		title: 'Edukacija',
+		text: 'Radionice i seminari za usavršavanje vještina skipera i posada.',
+	},
+];
+---
+
+<section class="bg-light py-20 md:py-28">
+	<div class="container-site">
+		<div class="text-center">
+			<h3 class="text-3xl font-semibold text-dark md:text-4xl">Naše usluge</h3>
+			<p class="mx-auto mt-4 max-w-xl text-lg text-muted">
+				Podržavamo skipere i posade kroz edukaciju i sigurnost na moru.
+			</p>
+		</div>
+
+		<div class="mt-12 grid gap-8 md:grid-cols-2">
+			{services.map((s) => (
+				<article class="overflow-hidden rounded-2xl bg-white shadow-sm">
+					<Image
+						src={s.image}
+						alt=""
+						widths={[480, 768, 1024]}
+						sizes="(min-width: 768px) 50vw, 100vw"
+						class="aspect-[2/1] w-full object-cover"
+					/>
+					<div class="p-6">
+						<h6 class="text-xl font-semibold text-dark">{s.title}</h6>
+						<p class="mt-2 text-muted">{s.text}</p>
+					</div>
+				</article>
+			))}
+		</div>
+	</div>
+</section>

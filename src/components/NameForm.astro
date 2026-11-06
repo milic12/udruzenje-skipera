@@ -1,0 +1,34 @@
+---
+// Visual-only form copied from the original site. It is not wired to a backend yet
+// (e.g. Formspree / Web3Forms / Netlify Forms), so submit is prevented.
+interface Props {
+	class?: string;
+	dark?: boolean;
+}
+
+const { class: className = '', dark = false } = Astro.props;
+---
+
+<form class:list={['flex flex-col gap-3', className]} onsubmit="return false;">
+	<label class="flex flex-col gap-2">
+		<span class:list={['font-heading text-sm font-medium', dark ? 'text-white' : 'text-dark']}>Vaše ime</span>
+		<input
+			type="text"
+			name="name"
+			required
+			placeholder="Unesite ime"
+			class:list={[
+				'rounded-md border px-4 py-3 focus:border-accent focus:outline-none',
+				dark
+					? 'border-white/20 bg-white/5 text-white placeholder:text-white/50'
+					: 'border-black/15 bg-white text-dark placeholder:text-muted/70',
+			]}
+		/>
+	</label>
+	<button
+		type="submit"
+		class:list={['btn mt-1 w-full', dark && 'bg-accent hover:bg-white hover:text-dark']}
+	>
+		Pošalji
+	</button>
+</form>
