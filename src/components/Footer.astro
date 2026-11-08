@@ -1,5 +1,5 @@
 ---
-import { CONTACT } from '../consts';
+import { CONTACT, SITE_TITLE } from '../consts';
 import NameForm from './NameForm.astro';
 import SocialIcons from './SocialIcons.astro';
 ---
@@ -40,7 +40,7 @@ import SocialIcons from './SocialIcons.astro';
 
 	<div class="bg-dark">
 		<p class="container-site py-6 text-center text-xs text-white/50">
-			&copy; 2025 Udruženje skipera Crne Gore &nbsp;|&nbsp; Sva prava zadržana
+			&copy; {new Date().getFullYear()} {SITE_TITLE} &nbsp;|&nbsp; Sva prava zadržana
 		</p>
 	</div>
 </footer>

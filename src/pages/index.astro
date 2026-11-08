@@ -3,10 +3,11 @@ import About from '../components/home/About.astro';
 import Gallery from '../components/home/Gallery.astro';
 import Hero from '../components/home/Hero.astro';
 import Services from '../components/home/Services.astro';
+import { SITE_TITLE } from '../consts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout overlayHeader>
+<BaseLayout title={`${SITE_TITLE} – edukacija i sigurnost na moru`} overlayHeader>
 	<Hero />
 	<Services />
 	<About />

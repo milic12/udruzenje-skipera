@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import logoDark from '../assets/images/logo-dark.svg';
+import logoOnDark from '../assets/images/logo-on-dark.svg';
 import logo from '../assets/images/logo.png';
 import { NAV_LINKS, SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
@@ -37,8 +37,8 @@ const { overlay = false } = Astro.props;
 			{
 				overlay ? (
 					<>
-						{/* dark logo while transparent over the hero, regular logo once the header turns white */}
-						<Image src={logoDark} alt={`${SITE_TITLE} logo`} width={64} height={64} class="h-16 w-16 group-data-scrolled:hidden" />
+						{/* light logo while transparent over the dark hero, regular logo once the header turns white */}
+						<Image src={logoOnDark} alt={`${SITE_TITLE} logo`} width={64} height={64} class="h-16 w-16 group-data-scrolled:hidden" />
 						<Image src={logo} alt={`${SITE_TITLE} logo`} width={64} height={64} class="hidden h-16 w-16 group-data-scrolled:block" />
 					</>
 				) : (
