@@ -4,37 +4,43 @@ import NameForm from './NameForm.astro';
 import SocialIcons from './SocialIcons.astro';
 ---
 
-<footer class="bg-dark text-white">
-	<div class="container-site grid gap-10 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
-		<div>
-			<h5 class="text-3xl font-semibold">Kontakt</h5>
-			<p class="mt-3 text-white/80">Tu smo za sva vaša pitanja i sugestije.</p>
-			<SocialIcons class="mt-6 text-white" />
-			<NameForm class="mt-8 max-w-sm" dark />
-		</div>
+<footer>
+	<div class="bg-light">
+		<div class="container-site grid gap-10 py-16 md:grid-cols-[1.2fr_1fr_1fr]">
+			<div>
+				<h2 class="text-2xl font-semibold text-dark">Budite u toku</h2>
+				<p class="mt-2 text-muted">Prijavite se i pratite novosti udruženja.</p>
+				<NameForm class="mt-5 max-w-sm" inline />
+				<SocialIcons
+					class="mt-5 text-primary [&>a]:grid [&>a]:h-9 [&>a]:w-9 [&>a]:place-items-center [&>a]:rounded-full [&>a]:bg-white [&>a]:transition-colors [&>a]:hover:bg-accent [&>a]:hover:text-white [&>a]:hover:opacity-100 [&_svg]:h-4 [&_svg]:w-4"
+				/>
+			</div>
 
-		<div>
-			<h6 class="font-heading text-lg font-medium">Email</h6>
-			<a href={`mailto:${CONTACT.email}`} class="mt-3 block break-all text-white/80 hover:text-accent">
-				{CONTACT.email}
-			</a>
-		</div>
+			<div>
+				<h3 class="eyebrow font-semibold text-muted">Email</h3>
+				<a href={`mailto:${CONTACT.email}`} class="mt-3 block break-all text-dark hover:text-primary">
+					{CONTACT.email}
+				</a>
+			</div>
 
-		<div>
-			<h6 class="font-heading text-lg font-medium">Telefon</h6>
-			<ul class="mt-3 space-y-1">
-				{CONTACT.phones.map((phone) => (
-					<li>
-						<a href={`tel:${phone.replace(/\s/g, '')}`} class="text-white/80 hover:text-accent">
-							{phone}
-						</a>
-					</li>
-				))}
-			</ul>
+			<div>
+				<h3 class="eyebrow font-semibold text-muted">Telefon</h3>
+				<ul class="mt-3 space-y-1">
+					{CONTACT.phones.map((phone) => (
+						<li>
+							<a href={`tel:${phone.replace(/\s/g, '')}`} class="text-dark hover:text-primary">
+								{phone}
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
 		</div>
 	</div>
 
-	<div class="border-t border-white/10">
-		<p class="container-site py-6 text-sm text-white/60">&copy; 2025. All rights reserved.</p>
+	<div class="bg-dark">
+		<p class="container-site py-6 text-center text-xs text-white/50">
+			&copy; 2025 Udruženje skipera Crne Gore &nbsp;|&nbsp; Sva prava zadržana
+		</p>
 	</div>
 </footer>

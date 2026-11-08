@@ -34,5 +34,31 @@
 }
 
 @utility btn {
-	@apply inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 font-heading font-medium text-white transition-colors hover:bg-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+	@apply inline-flex cursor-pointer items-center justify-center rounded-full bg-accent px-6 py-2.5 font-heading text-sm font-semibold text-white shadow-[0_6px_18px_-8px_rgb(44_90_123/0.6)] transition hover:-translate-y-px hover:bg-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+}
+
+@utility btn-ghost {
+	@apply inline-flex items-center justify-center rounded-full bg-white px-8 py-3 font-heading text-xs font-semibold tracking-widest text-primary uppercase transition hover:bg-accent hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+}
+
+@utility eyebrow {
+	@apply font-heading text-xs font-medium tracking-[0.14em] uppercase;
+}
+
+/* Boat gently rocking on the hero wave (centering is done by the `translate` property) */
+@keyframes rock {
+	0%,
+	100% {
+		transform: rotate(-1.5deg) translateY(0);
+	}
+	50% {
+		transform: rotate(1.5deg) translateY(-5px);
+	}
+}
+
+@utility animate-rock {
+	animation: rock 5s ease-in-out infinite;
+	@media (prefers-reduced-motion: reduce) {
+		animation: none;
+	}
 }

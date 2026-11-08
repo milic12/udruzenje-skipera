@@ -1,34 +1,28 @@
 ---
 import { Image } from 'astro:assets';
-import aboutImage from '../../assets/images/about.jpg';
+import featureImage from '../../assets/images/multiple-boats.jpeg';
+import NameForm from '../NameForm.astro';
 ---
 
-<section class="bg-white py-20 md:py-28">
-	<div class="container-site grid items-center gap-12 md:grid-cols-2">
-		<div>
-			<h3 class="text-3xl font-semibold text-dark md:text-4xl">O nama i našem radu</h3>
-			<p class="mt-6 text-lg text-muted">
-				Udruženje skipera i članova posade jahti iz Crne Gore posvećeno je sigurnosti i edukaciji na
-				moru.
-			</p>
-			<a href="/clanstvo" class="btn mt-8">Saznaj više</a>
-		</div>
+<section class="relative isolate flex min-h-[560px] items-center text-white md:min-h-[640px]">
+	<Image
+		src={featureImage}
+		alt=""
+		widths={[768, 1440]}
+		sizes="100vw"
+		class="absolute inset-0 -z-20 h-full w-full object-cover object-[65%_center] md:object-[70%_60%]"
+	/>
+	<!-- light fade from the section above + dark gradient behind the form -->
+	<div
+		class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,var(--color-light)_0%,rgb(234_246_251/0)_18%),linear-gradient(0deg,rgb(13_20_26/0.75),rgb(13_20_26/0.25))] md:bg-[linear-gradient(180deg,var(--color-light)_0%,rgb(234_246_251/0.6)_10%,rgb(234_246_251/0)_26%),linear-gradient(90deg,rgb(13_20_26/0.7)_0%,rgb(13_20_26/0.35)_45%,rgb(13_20_26/0)_70%)]"
+		aria-hidden="true"
+	>
+	</div>
 
-		<div class="relative">
-			<Image
-				src={aboutImage}
-				alt="Članovi Udruženja skipera Crne Gore"
-				widths={[480, 768, 1024]}
-				sizes="(min-width: 768px) 50vw, 100vw"
-				class="aspect-[4/3] w-full rounded-2xl object-cover shadow-lg"
-			/>
-			<figure class="relative -mt-12 ml-6 max-w-xs rounded-xl bg-white p-5 shadow-lg md:absolute md:-bottom-8 md:-left-8 md:mt-0 md:ml-0">
-				<span class="font-heading text-5xl leading-none text-accent" aria-hidden="true">"</span>
-				<blockquote class="-mt-3 font-heading text-lg font-semibold text-dark">
-					Pravi savez za profesionalce na moru.
-				</blockquote>
-				<figcaption class="mt-2 text-muted">Marko P.</figcaption>
-			</figure>
+	<div class="container-site">
+		<div class="max-w-sm pt-32 pb-24">
+			<h2 class="text-3xl leading-tight font-bold md:text-4xl">Prijavite se sada</h2>
+			<NameForm class="mt-8" dark />
 		</div>
 	</div>
 </section>

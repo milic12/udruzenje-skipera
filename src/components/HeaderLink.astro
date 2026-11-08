@@ -1,9 +1,15 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-type Props = HTMLAttributes<'a'>;
+type Props = HTMLAttributes<'a'> & {
+	/**
+	 * White text with an accent underline, for use over the hero image.
+	 * Turns dark when an ancestor `.group` header gets `data-scrolled`.
+	 */
+	light?: boolean;
+};
 
-const { href, class: className, ...props } = Astro.props;
+const { href, class: className, light = false, ...props } = Astro.props;
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
 const subpath = pathname.match(/[^\/]+/g);
 const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
@@ -12,8 +18,17 @@ const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
 <a
 	href={href}
 	class:list={[
-		'font-heading font-medium transition-colors hover:text-primary',
-		isActive ? 'text-primary' : 'text-dark',
+		'font-heading font-medium transition-colors',
+		light
+			? [
+					'relative text-white/90 hover:text-white',
+					isActive
+						? 'group-data-scrolled:text-primary'
+						: 'group-data-scrolled:text-dark group-data-scrolled:hover:text-primary',
+					'after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:bg-accent after:transition-all',
+					isActive ? 'after:w-full' : 'after:w-0 hover:after:w-full',
+				]
+			: ['hover:text-primary', isActive ? 'text-primary' : 'text-dark'],
 		className,
 	]}
 	aria-current={isActive ? 'page' : undefined}

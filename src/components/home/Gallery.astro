@@ -1,35 +1,47 @@
 ---
 import { Image } from 'astro:assets';
-import g1 from '../../assets/images/gallery-1.jpg';
-import g2 from '../../assets/images/gallery-2.jpg';
-import g3 from '../../assets/images/gallery-3.jpg';
+import meeting from '../../assets/images/about.jpg';
+import coast from '../../assets/images/gallery-3.jpg';
+import perast from '../../assets/images/gallery-kotor-boat.jpg';
 import skadar from '../../assets/images/gallery-skadar.jpg';
-import kotorYachts from '../../assets/images/gallery-kotor-yachts.jpg';
-import kotorBoat from '../../assets/images/gallery-kotor-boat.jpg';
 
 const images = [
-	{ src: g1, alt: 'Galerija – fotografija 1' },
-	{ src: g2, alt: 'Galerija – fotografija 2' },
-	{ src: g3, alt: 'Galerija – fotografija 3' },
-	{ src: skadar, alt: 'Skadarsko jezero' },
-	{ src: kotorYachts, alt: 'Jahte u Bokokotorskom zalivu' },
-	{ src: kotorBoat, alt: 'Brod u Bokokotorskom zalivu' },
+	{
+		src: perast,
+		alt: 'Gospa od Škrpjela, Perast',
+		caption: 'Perast, Boka Kotorska',
+		class: 'col-span-2 md:col-span-1 md:row-span-2',
+	},
+	{ src: coast, alt: 'Gliser u tirkiznom zalivu', caption: 'Crnogorsko primorje', class: '' },
+	{ src: meeting, alt: 'Sastanak članova udruženja', caption: 'Sastanak članova', class: '' },
+	{ src: skadar, alt: 'Skadarsko jezero', caption: 'Skadarsko jezero', class: 'col-span-2' },
 ];
 ---
 
-<section class="bg-light py-20 md:py-28">
-	<div class="container-site">
-		<h3 class="text-center text-3xl font-semibold text-dark md:text-4xl">Galerija</h3>
-		<div class="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">
+<section class="bg-white py-20 text-center md:py-24">
+	<div class="container-site max-w-5xl">
+		<h2 class="text-3xl font-semibold text-dark">Galerija</h2>
+		<p class="mt-2 text-muted">Trenuci sa mora i iz rada udruženja</p>
+
+		<div
+			class="mt-10 grid grid-cols-2 grid-rows-[220px_150px_150px] gap-2.5 md:grid-cols-[1fr_1fr_0.8fr] md:grid-rows-[200px_160px]"
+		>
 			{images.map((img) => (
-				<Image
-					src={img.src}
-					alt={img.alt}
-					widths={[375, 768]}
-					sizes="(min-width: 768px) 33vw, 50vw"
-					class="aspect-square w-full rounded-xl object-cover transition-transform duration-300 hover:scale-[1.02]"
-				/>
+				<figure class:list={['group relative overflow-hidden', img.class]}>
+					<Image
+						src={img.src}
+						alt={img.alt}
+						widths={[400, 768]}
+						sizes="(min-width: 768px) 40vw, 100vw"
+						class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+					/>
+					<figcaption class="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/70 px-3.5 pt-8 pb-3 text-left font-heading text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
+						{img.caption}
+					</figcaption>
+				</figure>
 			))}
 		</div>
+
+		<a href="/aktivnosti" class="btn mt-8 text-xs">Pogledaj sve</a>
 	</div>
 </section>

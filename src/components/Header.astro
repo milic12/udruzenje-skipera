@@ -1,26 +1,65 @@
 ---
 import { Image } from 'astro:assets';
+import logoDark from '../assets/images/logo-dark.svg';
 import logo from '../assets/images/logo.png';
 import { NAV_LINKS, SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 import SocialIcons from './SocialIcons.astro';
+
+interface Props {
+	/** Transparent header laid over the home hero, with white links. */
+	overlay?: boolean;
+}
+
+const { overlay = false } = Astro.props;
 ---
 
-<header class="sticky top-0 z-50 border-b border-black/5 bg-white/95 backdrop-blur">
-	<nav class="container-site flex h-20 items-center justify-between gap-6">
+<header
+	id="site-header"
+	data-overlay={overlay ? '' : undefined}
+	class:list={[
+		'group z-50',
+		overlay
+			? [
+					'fixed inset-x-0 top-0 border-b border-transparent bg-transparent text-white transition-[background-color,border-color,box-shadow] duration-300',
+					'data-scrolled:border-black/5 data-scrolled:bg-white/95 data-scrolled:text-dark data-scrolled:shadow-sm data-scrolled:backdrop-blur',
+				]
+			: 'sticky top-0 border-b border-black/5 bg-white/95 text-dark backdrop-blur',
+	]}
+>
+	<nav
+		class:list={[
+			'container-site flex items-center justify-between gap-6',
+			overlay ? 'h-24 transition-[height] duration-300 group-data-scrolled:h-20' : 'h-20',
+		]}
+	>
 		<a href="/" class="shrink-0">
-			<Image src={logo} alt={`${SITE_TITLE} logo`} width={64} height={64} class="h-16 w-16" />
+			{
+				overlay ? (
+					<>
+						{/* dark logo while transparent over the hero, regular logo once the header turns white */}
+						<Image src={logoDark} alt={`${SITE_TITLE} logo`} width={64} height={64} class="h-16 w-16 group-data-scrolled:hidden" />
+						<Image src={logo} alt={`${SITE_TITLE} logo`} width={64} height={64} class="hidden h-16 w-16 group-data-scrolled:block" />
+					</>
+				) : (
+					<Image src={logo} alt={`${SITE_TITLE} logo`} width={64} height={64} class="h-16 w-16" />
+				)
+			}
 		</a>
 
 		<div class="hidden items-center gap-8 md:flex">
-			{NAV_LINKS.map((link) => <HeaderLink href={link.href}>{link.label}</HeaderLink>)}
-			<SocialIcons class="ml-2 text-dark" />
+			{NAV_LINKS.map((link) => <HeaderLink href={link.href} light={overlay}>{link.label}</HeaderLink>)}
+			<SocialIcons class={`ml-2 ${overlay ? 'text-white group-data-scrolled:text-dark' : 'text-dark'}`} />
+			{overlay && <a href="/kontakt" class="btn">Pridruži se</a>}
 		</div>
 
 		<button
 			id="menu-toggle"
 			type="button"
-			class="inline-flex h-10 w-10 items-center justify-center rounded-md text-dark md:hidden"
+			class:list={[
+				'inline-flex h-10 w-10 items-center justify-center rounded-md md:hidden',
+				overlay ? 'text-white group-data-scrolled:text-dark' : 'text-dark',
+			]}
 			aria-controls="mobile-menu"
 			aria-expanded="false"
 		>
@@ -40,11 +79,23 @@ import SocialIcons from './SocialIcons.astro';
 </header>
 
 <script>
+	const header = document.getElementById('site-header');
 	const toggle = document.getElementById('menu-toggle');
 	const menu = document.getElementById('mobile-menu');
+
+	// Overlay header: transparent at the top, white once the user scrolls (or opens the mobile menu).
+	const updateHeader = () => {
+		if (!header?.hasAttribute('data-overlay')) return;
+		const menuOpen = toggle?.getAttribute('aria-expanded') === 'true';
+		header.toggleAttribute('data-scrolled', window.scrollY > 10 || menuOpen);
+	};
+	updateHeader();
+	window.addEventListener('scroll', updateHeader, { passive: true });
+
 	toggle?.addEventListener('click', () => {
 		const open = toggle.getAttribute('aria-expanded') === 'true';
 		toggle.setAttribute('aria-expanded', String(!open));
 		menu?.classList.toggle('hidden', open);
+		updateHeader();
 	});
 </script>

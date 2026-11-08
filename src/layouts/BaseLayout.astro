@@ -9,9 +9,11 @@ interface Props {
 	title?: string;
 	description?: string;
 	image?: ImageMetadata;
+	/** Transparent header laid over a full-screen hero (home page). */
+	overlayHeader?: boolean;
 }
 
-const { title = SITE_TITLE, description = SITE_DESCRIPTION, image } = Astro.props;
+const { title = SITE_TITLE, description = SITE_DESCRIPTION, image, overlayHeader = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,7 +22,7 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION, image } = Astro.prop
 		<BaseHead title={title} description={description} image={image} />
 	</head>
 	<body class="flex min-h-screen flex-col">
-		<Header />
+		<Header overlay={overlayHeader} />
 		<main class="flex-1">
 			<slot />
 		</main>

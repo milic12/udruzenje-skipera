@@ -4,31 +4,58 @@
 interface Props {
 	class?: string;
 	dark?: boolean;
+	/** Rounded single-line field with the button inside it. */
+	inline?: boolean;
 }
 
-const { class: className = '', dark = false } = Astro.props;
+const { class: className = '', dark = false, inline = false } = Astro.props;
 ---
 
-<form class:list={['flex flex-col gap-3', className]} onsubmit="return false;">
-	<label class="flex flex-col gap-2">
-		<span class:list={['font-heading text-sm font-medium', dark ? 'text-white' : 'text-dark']}>Vaše ime</span>
-		<input
-			type="text"
-			name="name"
-			required
-			placeholder="Unesite ime"
+{
+	inline ? (
+		<form
 			class:list={[
-				'rounded-md border px-4 py-3 focus:border-accent focus:outline-none',
-				dark
-					? 'border-white/20 bg-white/5 text-white placeholder:text-white/50'
-					: 'border-black/15 bg-white text-dark placeholder:text-muted/70',
+				'flex rounded-full bg-white p-1.5 shadow-[0_10px_30px_-18px_rgb(44_90_123/0.6)]',
+				className,
 			]}
-		/>
-	</label>
-	<button
-		type="submit"
-		class:list={['btn mt-1 w-full', dark && 'bg-accent hover:bg-white hover:text-dark']}
-	>
-		Pošalji
-	</button>
-</form>
+			onsubmit="return false;"
+		>
+			<label class="flex min-w-0 flex-1">
+				<span class="sr-only">Vaše ime</span>
+				<input
+					type="text"
+					name="name"
+					required
+					placeholder="Vaše ime"
+					class="min-w-0 flex-1 bg-transparent px-4 text-sm text-dark outline-none placeholder:text-muted/70"
+				/>
+			</label>
+			<button type="submit" class="btn">
+				Pošalji
+			</button>
+		</form>
+	) : (
+		<form class:list={['flex flex-col gap-3', className]} onsubmit="return false;">
+			<label class="flex flex-col gap-2">
+				<span class:list={['font-heading text-sm font-medium', dark ? 'text-white' : 'text-dark']}>
+					Vaše ime
+				</span>
+				<input
+					type="text"
+					name="name"
+					required
+					placeholder="Unesite ime"
+					class:list={[
+						'rounded-md border px-4 py-3 focus:border-accent focus:outline-none',
+						dark
+							? 'border-white/20 bg-white/5 text-white placeholder:text-white/50'
+							: 'border-black/15 bg-white text-dark placeholder:text-muted/70',
+					]}
+				/>
+			</label>
+			<button type="submit" class:list={['btn mt-1 w-full', dark && 'hover:bg-white hover:text-dark']}>
+				Pošalji
+			</button>
+		</form>
+	)
+}

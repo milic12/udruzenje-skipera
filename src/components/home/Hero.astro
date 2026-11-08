@@ -1,28 +1,65 @@
 ---
-const features = [
-	{ title: 'Edukacija', text: 'Radionice i treninzi za usavršavanje skipera' },
-	{ title: 'Događaji', text: 'Razmjena znanja i iskustava među članovima' },
-	{ title: 'Članstvo', text: 'Podrška u primjeni sigurnosnih standarda' },
-];
+import { Image } from 'astro:assets';
+import boat from '../../assets/images/hero-boat.png';
+import heroImage from '../../assets/images/hero-plava-spilja.jpg';
 ---
 
-<section class="bg-linear-135 from-light via-accent to-primary">
-	<div class="container-site py-20 text-center md:py-28">
-		<h1 class="mx-auto max-w-3xl text-4xl leading-tight font-semibold text-dark sm:text-5xl md:text-6xl">
-			Udruženje skipera Crne Gore
-		</h1>
-		<p class="mx-auto mt-6 max-w-xl text-lg text-dark/80">
-			Povezujemo profesionalce za sigurnost i edukaciju na moru
-		</p>
-		<a href="/kontakt" class="btn mt-8">Pridruži se</a>
-
-		<ul class="mt-16 grid gap-8 text-left sm:grid-cols-3">
-			{features.map((f) => (
-				<li class="rounded-xl bg-white/80 p-6 shadow-sm backdrop-blur">
-					<h6 class="text-lg font-semibold text-dark">{f.title}</h6>
-					<p class="mt-2 text-muted">{f.text}</p>
-				</li>
-			))}
-		</ul>
+<section class="hero relative isolate flex min-h-svh flex-col text-white">
+	<Image
+		src={heroImage}
+		alt=""
+		widths={[768, 1200]}
+		sizes="100vw"
+		loading="eager"
+		fetchpriority="high"
+		class="absolute inset-0 -z-20 h-full w-full object-cover object-[center_60%]"
+	/>
+	<div
+		class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgb(13_20_26/0.15)_0%,rgb(13_20_26/0.45)_100%),linear-gradient(180deg,rgb(13_20_26/0.7)_0%,rgb(13_20_26/0.45)_40%,rgb(44_90_123/0.35)_75%,rgb(13_20_26/0.25)_100%)]"
+		aria-hidden="true"
+	>
 	</div>
+
+	<div class="container-site flex flex-1 flex-col items-center justify-center pt-28 pb-[210px] text-center md:pb-[300px]">
+		<h1 class="text-5xl leading-[0.95] font-extrabold tracking-tight drop-shadow-[0_8px_40px_rgb(0_0_0/0.25)] sm:text-7xl lg:text-8xl">
+			Udruženje <span class="text-accent">skipera</span><br />Crne Gore
+		</h1>
+		<p class="mt-5 max-w-md text-base font-light text-white/90">
+			Povezujemo profesionalce za sigurnost i edukaciju na moru.
+		</p>
+	</div>
+
+	<!-- Boat riding the wave crest; the lower part sinks into the wave -->
+	<Image
+		src={boat}
+		alt=""
+		widths={[440, 520]}
+		sizes="(min-width: 768px) 260px, 220px"
+		loading="eager"
+		class="animate-rock absolute bottom-[calc(var(--curve-h)*0.7-var(--boat-w)*0.08)] left-1/2 z-10 h-auto w-(--boat-w) origin-[50%_90%] -translate-x-1/2 drop-shadow-[0_18px_22px_rgb(13_20_26/0.4)]"
+	/>
+
+	<!-- Wave rising to a crest in the centre (crest at 30% of the wave height) -->
+	<svg
+		class="absolute inset-x-0 -bottom-[calc(var(--curve-h)*0.3-var(--boat-w)*0.15)] z-20 block h-(--curve-h) w-full"
+		viewBox="0 0 1440 200"
+		preserveAspectRatio="none"
+		aria-hidden="true"
+	>
+		<path d="M0 115 C 280 95, 500 40, 720 40 C 940 40, 1160 95, 1440 110 L1440 200 L0 200 Z" fill="#fff" opacity=".35"></path>
+		<path d="M0 160 C 300 150, 520 60, 720 60 C 920 60, 1140 150, 1440 160 L1440 200 L0 200 Z" fill="#fff"></path>
+	</svg>
 </section>
+
+<style>
+	.hero {
+		--curve-h: 120px;
+		--boat-w: 220px;
+	}
+	@media (min-width: 768px) {
+		.hero {
+			--curve-h: 250px;
+			--boat-w: 360px;
+		}
+	}
+</style>
