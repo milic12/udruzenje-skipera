@@ -1,0 +1,61 @@
+---
+const faqs = [
+	{
+		q: 'Ko može postati član?',
+		a: 'Profesionalni skiperi i članovi posade jahti iz Crne Gore.',
+	},
+	{
+		q: 'Kako se prijaviti za članstvo?',
+		a: 'Popunite online formular na sajtu ili nas kontaktirajte direktno.',
+	},
+	{
+		q: 'Koje su prednosti članstva?',
+		a: 'Pristup edukacijama, događajima, razmeni iskustava i podršci u radu na jahtama.',
+	},
+	{
+		q: 'Da li je članstvo plaćeno?',
+		a: 'Da, postoji godišnja članarina koja podržava aktivnosti udruženja.',
+	},
+	{
+		q: 'Kako mogu kontaktirati udruženje?',
+		a: 'Putem kontakt forme na sajtu ili direktno na naš email.',
+	},
+];
+---
+
+<section class="bg-white py-16 md:py-24">
+	<div class="container-site max-w-3xl">
+		<div class="text-center">
+			<span class="eyebrow text-muted">Članstvo</span>
+			<h2 class="mt-3 text-3xl font-semibold text-dark">Često postavljana pitanja</h2>
+		</div>
+
+		<div class="mt-10 divide-y divide-black/10 border-y border-black/10">
+			{
+				faqs.map((f, i) => (
+					<details class="group" open={i === 0}>
+						<summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-heading font-semibold text-dark transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
+							{f.q}
+							<span class="grid h-8 w-8 flex-none place-items-center rounded-full bg-light text-primary transition-transform duration-300 group-open:rotate-180">
+								<svg
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M6 9l6 6 6-6" />
+								</svg>
+							</span>
+						</summary>
+						<p class="pr-12 pb-5 leading-relaxed text-muted">{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</div>
+</section>

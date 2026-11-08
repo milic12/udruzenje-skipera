@@ -1,0 +1,35 @@
+---
+// Section title: eyebrow with accent rule(s), H2 with an optional highlighted phrase, optional subtitle.
+interface Props {
+	eyebrow?: string;
+	title: string;
+	highlight?: string;
+	subtitle?: string;
+	center?: boolean;
+	class?: string;
+}
+
+const { eyebrow, title, highlight, subtitle, center = false, class: className = '' } = Astro.props;
+
+const at = highlight ? title.indexOf(highlight) : -1;
+const [before, marked, after] =
+	at >= 0 && highlight
+		? [title.slice(0, at), highlight, title.slice(at + highlight.length)]
+		: [title, '', ''];
+---
+
+<div class:list={[center && 'mx-auto max-w-2xl text-center', className]}>
+	{
+		eyebrow && (
+			<span class:list={['eyebrow flex items-center gap-3 text-primary', center && 'justify-center']}>
+				<span class="h-px w-8 bg-accent" aria-hidden="true" />
+				{eyebrow}
+				{center && <span class="h-px w-8 bg-accent" aria-hidden="true" />}
+			</span>
+		)
+	}
+	<h2 class="mt-4 text-3xl leading-tight font-bold tracking-tight text-dark md:text-4xl">
+		{before}{marked && <span class="text-primary">{marked}</span>}{after}
+	</h2>
+	{subtitle && <p class="mt-4 leading-relaxed text-muted">{subtitle}</p>}
+</div>

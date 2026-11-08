@@ -1,0 +1,35 @@
+---
+// Inner-page header: H1 and an optional lead sentence, ending in a soft wave.
+interface Props {
+	title: string;
+	lead?: string;
+	titleClass?: string;
+}
+
+const { title, lead, titleClass } = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden bg-light pt-14 pb-24 md:pt-20 md:pb-32">
+	<div
+		class="absolute -top-24 -right-24 -z-10 h-72 w-72 rounded-full bg-accent/15 blur-3xl"
+		aria-hidden="true"
+	>
+	</div>
+
+	<div class="container-site text-center">
+		<h1 class:list={["text-4xl font-bold tracking-tight text-dark md:text-6xl", titleClass]}>{title}</h1>
+		<span class="mx-auto mt-1 block h-1 w-14 rounded-full bg-accent" aria-hidden="true"></span>
+		<slot name="icon" />
+		{lead && <p class="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted">{lead}</p>}
+	</div>
+
+	<svg
+		class="absolute inset-x-0 bottom-0 h-12 w-full text-white md:h-16"
+		viewBox="0 0 1440 80"
+		preserveAspectRatio="none"
+		fill="currentColor"
+		aria-hidden="true"
+	>
+		<path d="M0 48c180 26 360 32 540 14S900 4 1080 14s300 34 360 40v26H0z"></path>
+	</svg>
+</section>
