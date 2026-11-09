@@ -2,14 +2,33 @@
 
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import sanity from '@sanity/astro';
 import { defineConfig, fontProviders } from 'astro/config';
+import { loadEnv } from 'vite';
 
 import tailwindcss from '@tailwindcss/vite';
+
+// astro.config runs before Astro loads .env, so read the PUBLIC_ vars via Vite.
+const { PUBLIC_SANITY_STUDIO_PROJECT_ID, PUBLIC_SANITY_STUDIO_DATASET } = loadEnv(
+  process.env.NODE_ENV ?? 'development',
+  process.cwd(),
+  '',
+);
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.udruzenjeskipera.me',
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    sitemap(),
+    sanity({
+      projectId: PUBLIC_SANITY_STUDIO_PROJECT_ID,
+      dataset: PUBLIC_SANITY_STUDIO_DATASET,
+      apiVersion: '2026-11-09',
+      useCdn: false, // static build: fetch fresh published content at build time
+      // Studio is standalone in ../studio — not embedded here.
+    }),
+  ],
 
   fonts: [
     {
