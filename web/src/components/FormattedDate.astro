@@ -1,15 +1,19 @@
 ---
 interface Props {
-	date: Date;
+	/** A Date, or an ISO string such as "2026-02-12" coming from Sanity. */
+	date: Date | string;
 }
 
 const { date } = Astro.props;
+// Date-only strings ("YYYY-MM-DD") are parsed as UTC; format in UTC so the day never shifts.
+const value = typeof date === 'string' ? new Date(date) : date;
 ---
 
-<time datetime={date.toISOString()}>
-	{date.toLocaleDateString('en-us', {
+<time datetime={value.toISOString().slice(0, 10)}>
+	{value.toLocaleDateString('sr-Latn-ME', {
 		year: 'numeric',
-		month: 'short',
+		month: 'long',
 		day: 'numeric',
+		timeZone: 'UTC',
 	})}
 </time>

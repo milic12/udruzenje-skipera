@@ -1,0 +1,54 @@
+---
+import FormattedDate from '../../components/FormattedDate.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import SanityImage from '../../components/SanityImage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_TITLE } from '../../consts';
+import { getActivities } from '../../utils/sanity';
+
+const activities = await getActivities();
+---
+
+<BaseLayout
+	title={`Aktivnosti | ${SITE_TITLE}`}
+	description="Radionice, seminari i druženja Udruženja skipera Crne Gore – edukacija i razmjena iskustava među skiperima i posadama jahti."
+>
+	<PageHeader title="Aktivnosti" titleClass="mt-8" />
+
+	<section class="bg-white py-16 md:py-24">
+		<div class="container-site">
+			{
+				activities.length === 0 ? (
+					<p class="text-center text-muted">Uskoro ćemo objaviti prve aktivnosti.</p>
+				) : (
+					<ul class="grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+						{activities.map((a, i) => (
+							<li>
+								<a href={`/aktivnosti/${a.slug}/`} class="group block">
+									<div class="aspect-[4/3] overflow-hidden rounded-xl bg-light">
+										<SanityImage
+											image={a.mainImage}
+											aspect={4 / 3}
+											widths={[400, 640, 900]}
+											sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+											loading={i < 3 ? 'eager' : 'lazy'}
+											class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+										/>
+									</div>
+									<p class="eyebrow mt-5 text-primary">
+										{a.date && <FormattedDate date={a.date} />}
+										{a.location && <span> · {a.location}</span>}
+									</p>
+									<h2 class="mt-2 text-xl leading-snug font-semibold text-dark transition-colors group-hover:text-primary">
+										{a.title}
+									</h2>
+									{a.lead && <p class="mt-2 line-clamp-3 leading-relaxed text-muted">{a.lead}</p>}
+								</a>
+							</li>
+						))}
+					</ul>
+				)
+			}
+		</div>
+	</section>
+</BaseLayout>

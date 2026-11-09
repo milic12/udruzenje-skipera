@@ -229,7 +229,7 @@ export type AllSanitySchemaTypes =
 
 // Source: ../web/src/utils/sanity.ts
 // Variable: ACTIVITIES_QUERY
-// Query: *[_type == "activity" && defined(slug.current)] | order(date desc) {    _id,    title,    "slug": slug.current,    date,    location,    lead,    mainImage  }
+// Query: *[_type == "activity" && defined(slug.current)] | order(date desc) {    _id,    title,    "slug": slug.current,    date,    location,    lead,    mainImage { ..., "dimensions": asset->metadata.dimensions, "lqip": asset->metadata.lqip }  }
 export type ACTIVITIES_QUERY_RESULT = Array<{
   _id: string;
   title: string | null;
@@ -244,12 +244,19 @@ export type ACTIVITIES_QUERY_RESULT = Array<{
     crop?: SanityImageCrop;
     alt?: string;
     _type: "image";
+    dimensions: SanityImageDimensions | null;
+    lqip: string | null;
   } | null;
 }>;
 
 // Source: ../web/src/utils/sanity.ts
+// Variable: ACTIVITY_SLUGS_QUERY
+// Query: *[_type == "activity" && defined(slug.current)].slug.current
+export type ACTIVITY_SLUGS_QUERY_RESULT = Array<string | null>;
+
+// Source: ../web/src/utils/sanity.ts
 // Variable: ACTIVITY_QUERY
-// Query: *[_type == "activity" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    date,    location,    lead,    mainImage,    body,    gallery,    attendanceInPerson,    attendanceOnline,    guests[] { _key, name, role }  }
+// Query: *[_type == "activity" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    date,    location,    lead,    mainImage { ..., "dimensions": asset->metadata.dimensions, "lqip": asset->metadata.lqip },    body[] {      ...,      _type == "image" => { "dimensions": asset->metadata.dimensions, "lqip": asset->metadata.lqip }    },    gallery[] { ..., "dimensions": asset->metadata.dimensions, "lqip": asset->metadata.lqip },    attendanceInPerson,    attendanceOnline,    guests[] { _key, name, role }  }
 export type ACTIVITY_QUERY_RESULT = {
   _id: string;
   title: string | null;
@@ -264,8 +271,41 @@ export type ACTIVITY_QUERY_RESULT = {
     crop?: SanityImageCrop;
     alt?: string;
     _type: "image";
+    dimensions: SanityImageDimensions | null;
+    lqip: string | null;
   } | null;
-  body: BlockContent | null;
+  body: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        caption?: string;
+        _type: "image";
+        _key: string;
+        dimensions: SanityImageDimensions | null;
+        lqip: string | null;
+      }
+  > | null;
   gallery: Array<{
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -274,6 +314,8 @@ export type ACTIVITY_QUERY_RESULT = {
     alt?: string;
     _type: "image";
     _key: string;
+    dimensions: SanityImageDimensions | null;
+    lqip: string | null;
   }> | null;
   attendanceInPerson: number | null;
   attendanceOnline: number | null;
@@ -287,8 +329,9 @@ export type ACTIVITY_QUERY_RESULT = {
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '\n  *[_type == "activity" && defined(slug.current)] | order(date desc) {\n    _id,\n    title,\n    "slug": slug.current,\n    date,\n    location,\n    lead,\n    mainImage\n  }\n': ACTIVITIES_QUERY_RESULT;
-    '\n  *[_type == "activity" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    date,\n    location,\n    lead,\n    mainImage,\n    body,\n    gallery,\n    attendanceInPerson,\n    attendanceOnline,\n    guests[] { _key, name, role }\n  }\n': ACTIVITY_QUERY_RESULT;
+    '\n  *[_type == "activity" && defined(slug.current)] | order(date desc) {\n    _id,\n    title,\n    "slug": slug.current,\n    date,\n    location,\n    lead,\n    mainImage { ..., "dimensions": asset->metadata.dimensions, "lqip": asset->metadata.lqip }\n  }\n': ACTIVITIES_QUERY_RESULT;
+    '\n  *[_type == "activity" && defined(slug.current)].slug.current\n': ACTIVITY_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "activity" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    date,\n    location,\n    lead,\n    mainImage { ..., "dimensions": asset->metadata.dimensions, "lqip": asset->metadata.lqip },\n    body[] {\n      ...,\n      _type == "image" => { "dimensions": asset->metadata.dimensions, "lqip": asset->metadata.lqip }\n    },\n    gallery[] { ..., "dimensions": asset->metadata.dimensions, "lqip": asset->metadata.lqip },\n    attendanceInPerson,\n    attendanceOnline,\n    guests[] { _key, name, role }\n  }\n': ACTIVITY_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too
