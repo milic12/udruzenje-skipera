@@ -1,30 +1,39 @@
 ---
+import ContactForm from '../components/membership/ContactForm.astro';
+import PageHeader from '../components/PageHeader.astro';
+import SocialIcons from '../components/SocialIcons.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { CONTACT, SITE_TITLE } from '../consts';
+
+const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(CONTACT.address)}&t=m&z=14&ie=UTF8&output=embed`;
+const card = 'rounded-lg bg-light p-6 shadow-[0_10px_30px_-18px_rgb(44_90_123/0.6)] md:p-8';
+const heading = 'eyebrow font-semibold text-muted';
 ---
 
 <BaseLayout
 	title={`Kontakt | ${SITE_TITLE}`}
-	description="Kontaktirajte Udruženje skipera Crne Gore putem emaila ili telefona."
+	description="Kontaktirajte Udruženje skipera Crne Gore – email, telefon, adresa u Kotoru i radno vrijeme."
 >
-	<section class="bg-light py-16 text-center md:py-20">
-		<div class="container-site">
-			<span class="eyebrow text-primary">{SITE_TITLE}</span>
-			<h1 class="mt-3 text-4xl font-bold text-dark md:text-5xl">Kontakt</h1>
-		</div>
-	</section>
+	<PageHeader title="Kontakt" lead="Javite nam se za pitanja ili saradnju." />
+<ContactForm
+		eyebrow="Pišite nam"
+		title="Pošaljite poruku"
+		lead="Javite nam se za pitanja ili saradnju."
+		border={false}
+	/>
+	<section class="bg-white pb-16 md:pb-24">
+		<div class="container-site grid max-w-5xl gap-8 md:grid-cols-2">
+			<div class={card}>
+				<h2 class="text-2xl font-semibold text-dark">Kontakt</h2>
+				<p class="mt-2 text-muted">Tu smo za sva vaša pitanja i sugestije.</p>
 
-	<section class="bg-white py-16 md:py-24">
-		<div class="container-site grid max-w-4xl gap-10 md:grid-cols-2">
-			<div>
-				<h2 class="eyebrow font-semibold text-muted">Email</h2>
-				<a href={`mailto:${CONTACT.email}`} class="mt-3 block break-all text-lg text-dark hover:text-primary">
+				<h3 class:list={[heading, 'mt-6']}>Email</h3>
+				<a href={`mailto:${CONTACT.email}`} class="mt-2 block break-all text-lg text-dark hover:text-primary">
 					{CONTACT.email}
 				</a>
-			</div>
-			<div>
-				<h2 class="eyebrow font-semibold text-muted">Telefon</h2>
-				<ul class="mt-3 space-y-1">
+
+				<h3 class:list={[heading, 'mt-6']}>Telefon</h3>
+				<ul class="mt-2 space-y-1">
 					{CONTACT.phones.map((phone) => (
 						<li>
 							<a href={`tel:${phone.replace(/\s/g, '')}`} class="text-lg text-dark hover:text-primary">
@@ -33,7 +42,35 @@ import { CONTACT, SITE_TITLE } from '../consts';
 						</li>
 					))}
 				</ul>
+
+				<SocialIcons class="mt-6 text-primary" />
+			</div>
+
+			<div class={card}>
+				<h2 class="text-2xl font-semibold text-dark">Lokacija</h2>
+				<p class="mt-2 text-muted">
+					Naše udruženje se nalazi u Kotoru, lako dostupno svim članovima i partnerima.
+				</p>
+
+				<h3 class:list={[heading, 'mt-6']}>Adresa</h3>
+				<p class="mt-2 text-lg text-dark">{CONTACT.address}</p>
+
+				<h3 class:list={[heading, 'mt-6']}>Radno vrijeme</h3>
+				<p class="mt-2 text-lg text-dark">{CONTACT.hours}</p>
+			</div>
+
+			<div class="overflow-hidden rounded-lg md:col-span-2">
+				<iframe
+					src={mapSrc}
+					title={`Mapa – ${CONTACT.address}`}
+					class="h-80 w-full border-0 md:h-96"
+					loading="lazy"
+					referrerpolicy="no-referrer-when-downgrade"
+					allowfullscreen
+				></iframe>
 			</div>
 		</div>
 	</section>
+
+	
 </BaseLayout>

@@ -20,4 +20,6 @@ export const SOCIAL = {
 export const CONTACT = {
 	email: 'udruzenjeskiperacg@gmail.com',
 	phones: ['+382 68 544 334', '+382 63 203 722', '+382 68 657 448', '+382 63 216 200'],
+	address: 'Škaljari bb, Kotor',
+	hours: '09:00 - 17:00',
 };
