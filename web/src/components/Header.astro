@@ -50,7 +50,7 @@ const { overlay = false } = Astro.props;
 		<div class="hidden items-center gap-8 md:flex">
 			{NAV_LINKS.map((link) => <HeaderLink href={link.href} light={overlay}>{link.label}</HeaderLink>)}
 			<SocialIcons class={`ml-2 ${overlay ? 'text-white group-data-scrolled:text-dark' : 'text-dark'}`} />
-			{overlay && <a href="/kontakt" class="btn">Pridruži se</a>}
+			<a href="/kontakt" class="btn">Pridruži se</a>
 		</div>
 
 		<button
@@ -72,8 +72,9 @@ const { overlay = false } = Astro.props;
 
 	<div id="mobile-menu" class="hidden border-t border-black/5 bg-white md:hidden">
 		<div class="container-site flex flex-col gap-4 py-6">
-			{NAV_LINKS.map((link) => <HeaderLink href={link.href} class="text-lg">{link.label}</HeaderLink>)}
+			{NAV_LINKS.map((link) => <HeaderLink href={link.href} class="self-start text-lg">{link.label}</HeaderLink>)}
 			<SocialIcons class="pt-2 text-dark" />
+			<a href="/kontakt" class="btn self-start">Pridruži se</a>
 		</div>
 	</div>
 </header>

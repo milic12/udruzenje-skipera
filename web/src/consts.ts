@@ -7,7 +7,6 @@ export const SITE_DESCRIPTION =
 
 export const NAV_LINKS = [
 	{ href: '/', label: 'Početna' },
-	{ href: '/o-nama', label: 'O nama' },
 	{ href: '/clanstvo', label: 'Članstvo' },
 	{ href: '/aktivnosti', label: 'Aktivnosti' },
 	{ href: '/kontakt', label: 'Kontakt' },
