@@ -12,7 +12,8 @@
     "dev:studio": "npm run dev -w studio",
     "build": "npm run build -w web",
     "typegen": "npm run typegen -w studio",
-    "deploy": "npm run deploy -w web"
+    "deploy": "npm run deploy -w web",
+    "deploy:staging": "npm run deploy:staging -w web"
   },
   "engines": {
     "node": ">=22.12.0"

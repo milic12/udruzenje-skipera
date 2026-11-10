@@ -20,6 +20,8 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION, image, overlayHeader
 <html lang="sr-ME">
 	<head>
 		<BaseHead title={title} description={description} image={image} />
+		{/* Staging builds (npm run deploy:staging) must not be indexed by search engines. */}
+		{import.meta.env.PUBLIC_SITE_ENV === 'staging' && <meta name="robots" content="noindex, nofollow" />}
 	</head>
 	<body class="flex min-h-screen flex-col">
 		<Header overlay={overlayHeader} />

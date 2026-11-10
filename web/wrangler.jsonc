@@ -5,5 +5,11 @@
   // Fully static Astro build: Cloudflare serves web/dist as static assets, no Worker code.
   "assets": {
     "directory": "./dist"
+  },
+  // Top-level config = production. `wrangler deploy --env staging` deploys a separate Worker.
+  "env": {
+    "staging": {
+      "name": "udruzenje-skipera-staging"
+    }
   }
 }

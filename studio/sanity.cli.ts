@@ -5,6 +5,7 @@ export default defineCliConfig({
     projectId: 'eq119n1f',
     dataset: 'production'
   },
+  studioHost: 'udruzenje-skipera',
   typegen: {
     enabled: true,
     // Queries live in web/src/utils (TypeGen can't parse .astro frontmatter)

@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "astro build && wrangler deploy"
+    "deploy": "astro build && wrangler deploy",
+    "deploy:staging": "PUBLIC_SITE_ENV=staging astro build && wrangler deploy --env staging"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.3",
