@@ -1,0 +1,88 @@
+---
+// Full-screen "site in development" page, shown on the homepage while PUBLIC_COMING_SOON=true.
+// Reuses the homepage hero look (cave photo, overlay, rocking boat, wave).
+import { Image } from 'astro:assets';
+import boat from '../assets/images/hero-boat.png';
+import heroImage from '../assets/images/hero-plava-spilja.jpg';
+import logoOnDark from '../assets/images/logo-on-dark.svg';
+import { CONTACT, SITE_TITLE } from '../consts';
+import SocialIcons from './SocialIcons.astro';
+
+const phone = CONTACT.phones[0];
+---
+
+<section class="coming-soon relative isolate flex min-h-svh flex-col overflow-hidden text-white">
+	<Image
+		src={heroImage}
+		alt=""
+		widths={[768, 1200]}
+		sizes="100vw"
+		loading="eager"
+		fetchpriority="high"
+		class="absolute inset-0 -z-20 h-full w-full object-cover object-[center_60%]"
+	/>
+	<div
+		class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgb(13_20_26/0.25)_0%,rgb(13_20_26/0.55)_100%),linear-gradient(180deg,rgb(13_20_26/0.75)_0%,rgb(13_20_26/0.5)_40%,rgb(44_90_123/0.4)_75%,rgb(13_20_26/0.3)_100%)]"
+		aria-hidden="true"
+	>
+	</div>
+
+	<div class="container-site flex flex-1 flex-col items-center justify-center pt-10 pb-[230px] text-center md:pb-[320px]">
+		<Image src={logoOnDark} alt={`${SITE_TITLE} logo`} width={88} height={88} class="h-20 w-20 md:h-22 md:w-22" />
+
+		<span class="eyebrow mt-8 text-accent">Uskoro</span>
+		<h1
+			class="mt-3 text-4xl leading-[0.95] font-extrabold tracking-tight drop-shadow-[0_8px_40px_rgb(0_0_0/0.25)] sm:text-6xl lg:text-7xl"
+		>
+			Udruženje <span class="text-accent">skipera</span><br />Crne Gore
+		</h1>
+		<p class="mt-5 max-w-md text-base text-white/90">
+			Naš novi sajt je u izradi. Uskoro ćemo biti online sa svim informacijama o članstvu, aktivnostima i
+			edukaciji na moru.
+		</p>
+
+		<a href={`mailto:${CONTACT.email}`} class="btn mt-8">Pišite nam</a>
+
+		<p class="mt-5 flex flex-col gap-1 text-sm text-white/80 sm:flex-row sm:gap-3">
+			<a href={`tel:${phone.replace(/\s/g, '')}`} class="transition hover:text-accent">{phone}</a>
+			<span class="hidden sm:inline" aria-hidden="true">·</span>
+			<a href={`mailto:${CONTACT.email}`} class="break-all transition hover:text-accent">{CONTACT.email}</a>
+		</p>
+
+		<SocialIcons class="mt-5 text-white" />
+	</div>
+
+	<!-- Boat riding the wave crest; the lower part sinks into the wave -->
+	<Image
+		src={boat}
+		alt=""
+		widths={[440, 520]}
+		sizes="(min-width: 768px) 260px, 220px"
+		loading="eager"
+		class="animate-rock absolute bottom-[calc(var(--curve-h)*0.7-var(--boat-w)*0.08)] left-1/2 z-10 h-auto w-(--boat-w) origin-[50%_90%] -translate-x-1/2 drop-shadow-[0_18px_22px_rgb(13_20_26/0.4)]"
+	/>
+
+	<!-- Wave rising to a crest in the centre -->
+	<svg
+		class="absolute inset-x-0 -bottom-[calc(var(--curve-h)*0.3-var(--boat-w)*0.15)] z-20 block h-(--curve-h) w-full"
+		viewBox="0 0 1440 200"
+		preserveAspectRatio="none"
+		aria-hidden="true"
+	>
+		<path d="M0 115 C 280 95, 500 40, 720 40 C 940 40, 1160 95, 1440 110 L1440 200 L0 200 Z" fill="#fff" opacity=".35"></path>
+		<path d="M0 160 C 300 150, 520 60, 720 60 C 920 60, 1140 150, 1440 160 L1440 200 L0 200 Z" fill="#fff"></path>
+	</svg>
+</section>
+
+<style>
+	.coming-soon {
+		--curve-h: 120px;
+		--boat-w: 200px;
+	}
+	@media (min-width: 768px) {
+		.coming-soon {
+			--curve-h: 220px;
+			--boat-w: 300px;
+		}
+	}
+</style>

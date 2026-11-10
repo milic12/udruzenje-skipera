@@ -9,7 +9,7 @@ import { loadEnv } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 
 // astro.config runs before Astro loads .env, so read the PUBLIC_ vars via Vite.
-const { PUBLIC_SANITY_STUDIO_PROJECT_ID, PUBLIC_SANITY_STUDIO_DATASET } = loadEnv(
+const { PUBLIC_SANITY_STUDIO_PROJECT_ID, PUBLIC_SANITY_STUDIO_DATASET, PUBLIC_COMING_SOON } = loadEnv(
   process.env.NODE_ENV ?? 'development',
   process.cwd(),
   '',
@@ -20,7 +20,12 @@ export default defineConfig({
   site: 'https://www.udruzenjeskipera.me',
   integrations: [
     mdx(),
-    sitemap(),
+    // While the coming-soon page is live, only the homepage goes in the sitemap.
+    sitemap(
+      PUBLIC_COMING_SOON === 'true'
+        ? { filter: (page) => new URL(page).pathname === '/' }
+        : {},
+    ),
     sanity({
       projectId: PUBLIC_SANITY_STUDIO_PROJECT_ID,
       dataset: PUBLIC_SANITY_STUDIO_DATASET,

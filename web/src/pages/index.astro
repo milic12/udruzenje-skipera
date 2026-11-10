@@ -4,12 +4,24 @@ import Gallery from '../components/home/Gallery.astro';
 import Hero from '../components/home/Hero.astro';
 import Services from '../components/home/Services.astro';
 import { SITE_TITLE } from '../consts';
+import ComingSoon from '../components/ComingSoon.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Production shows the "in development" page until the site is ready (remove PUBLIC_COMING_SOON to launch).
+const comingSoon = import.meta.env.PUBLIC_COMING_SOON === 'true';
 ---
 
-<BaseLayout title={`${SITE_TITLE} – edukacija i sigurnost na moru`} overlayHeader>
-	<Hero />
-	<Services />
-	<About />
-	<Gallery />
-</BaseLayout>
+{
+	comingSoon ? (
+		<BaseLayout title={`${SITE_TITLE} – sajt u izradi`} bare>
+			<ComingSoon />
+		</BaseLayout>
+	) : (
+		<BaseLayout title={`${SITE_TITLE} – edukacija i sigurnost na moru`} overlayHeader>
+			<Hero />
+			<Services />
+			<About />
+			<Gallery />
+		</BaseLayout>
+	)
+}

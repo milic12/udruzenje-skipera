@@ -11,23 +11,28 @@ interface Props {
 	image?: ImageMetadata | string;
 	/** Transparent header laid over a full-screen hero (home page). */
 	overlayHeader?: boolean;
+	/** No header/footer coming-soon page */
+	bare?: boolean;
 }
 
-const { title = SITE_TITLE, description = SITE_DESCRIPTION, image, overlayHeader = false } = Astro.props;
+const { title = SITE_TITLE, description = SITE_DESCRIPTION, image, overlayHeader = false, bare = false } = Astro.props;
+
+// Staging must never be indexed. 
+const comingSoon = import.meta.env.PUBLIC_COMING_SOON === 'true';
+const noindex = import.meta.env.PUBLIC_SITE_ENV === 'staging' || (comingSoon && Astro.url.pathname !== '/');
 ---
 
 <!doctype html>
 <html lang="sr-ME">
 	<head>
 		<BaseHead title={title} description={description} image={image} />
-		{/* Staging builds (npm run deploy:staging) must not be indexed by search engines. */}
-		{import.meta.env.PUBLIC_SITE_ENV === 'staging' && <meta name="robots" content="noindex, nofollow" />}
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
 	</head>
 	<body class="flex min-h-screen flex-col">
-		<Header overlay={overlayHeader} />
+		{!bare && <Header overlay={overlayHeader} />}
 		<main class="flex-1">
 			<slot />
 		</main>
-		<Footer />
+		{!bare && <Footer />}
 	</body>
 </html>
