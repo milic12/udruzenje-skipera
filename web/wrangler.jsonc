@@ -1,0 +1,9 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "udruzenje-skipera",
+  "compatibility_date": "2026-11-10",
+  // Fully static Astro build: Cloudflare serves web/dist as static assets, no Worker code.
+  "assets": {
+    "directory": "./dist"
+  }
+}
