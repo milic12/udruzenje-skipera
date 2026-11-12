@@ -1,61 +1,88 @@
 ---
-// Visual-only form copied from the original site. It is not wired to a backend yet
-// (e.g. Formspree / Web3Forms / Netlify Forms), so submit is prevented.
+import Turnstile from './turnstile/Turnstile.astro';
+
 interface Props {
+	/** Which section the form is in. Sent to the Worker and used as the Turnstile action. */
+	source: 'home';
 	class?: string;
 	dark?: boolean;
-	/** Rounded single-line field with the button inside it. */
-	inline?: boolean;
 }
 
-const { class: className = '', dark = false, inline = false } = Astro.props;
+const { source, class: className = '', dark = false } = Astro.props;
+
+const label = ['font-heading text-sm font-medium', dark ? 'text-white' : 'text-dark'];
+const field = [
+	'rounded-md border px-4 py-3 focus:border-accent focus:outline-none',
+	dark
+		? 'border-white/20 bg-white/5 text-white placeholder:text-white/50'
+		: 'border-black/15 bg-white text-dark placeholder:text-muted/70',
+];
 ---
 
-{
-	inline ? (
-		<form
-			class:list={[
-				'flex rounded-full bg-white p-1.5 shadow-[0_10px_30px_-18px_rgb(44_90_123/0.6)]',
-				className,
-			]}
-			onsubmit="return false;"
+<div class={className} data-name-form>
+	<form class="relative flex flex-col gap-3" action="/api/contact" method="post">
+		<input type="hidden" name="source" value={source} />
+
+		<!-- Honeypot: hidden from people and screen readers; bots that fill it are ignored. -->
+		<div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+			<label>
+				Website
+				<input type="text" name="website" tabindex="-1" autocomplete="off" />
+			</label>
+		</div>
+
+		<label class="flex flex-col gap-2">
+			<span class:list={label}>Vaše ime</span>
+			<input
+				type="text"
+				name="firstName"
+				autocomplete="name"
+				placeholder="Unesite ime"
+				maxlength="100"
+				class:list={field}
+			/>
+		</label>
+		<label class="flex flex-col gap-2">
+			<span class:list={label}>E-mail*</span>
+			<input
+				type="email"
+				name="email"
+				required
+				autocomplete="email"
+				placeholder="mail@gmail.com"
+				maxlength="254"
+				class:list={field}
+			/>
+		</label>
+
+		<Turnstile action={source} class="mt-1" />
+
+		<button type="submit" class:list={['btn mt-1 w-full', dark && 'hover:bg-white hover:text-dark']}>
+			Pošalji
+		</button>
+
+		<p class="text-sm empty:hidden" role="status" aria-live="polite" data-status></p>
+	</form>
+
+	<!-- Shown in place of the form after a successful submit. -->
+	<div hidden data-success>
+		<h3
+			class:list={['text-2xl font-semibold focus:outline-none', dark ? 'text-white' : 'text-dark']}
+			tabindex="-1"
+			data-success-heading
 		>
-			<label class="flex min-w-0 flex-1">
-				<span class="sr-only">Vaše ime</span>
-				<input
-					type="text"
-					name="name"
-					required
-					placeholder="Vaše ime"
-					class="min-w-0 flex-1 bg-transparent px-4 text-sm text-dark outline-none placeholder:text-muted/70"
-				/>
-			</label>
-			<button type="submit" class="btn">
-				Pošalji
-			</button>
-		</form>
-	) : (
-		<form class:list={['flex flex-col gap-3', className]} onsubmit="return false;">
-			<label class="flex flex-col gap-2">
-				<span class:list={['font-heading text-sm font-medium', dark ? 'text-white' : 'text-dark']}>
-					Vaše ime
-				</span>
-				<input
-					type="text"
-					name="name"
-					required
-					placeholder="Unesite ime"
-					class:list={[
-						'rounded-md border px-4 py-3 focus:border-accent focus:outline-none',
-						dark
-							? 'border-white/20 bg-white/5 text-white placeholder:text-white/50'
-							: 'border-black/15 bg-white text-dark placeholder:text-muted/70',
-					]}
-				/>
-			</label>
-			<button type="submit" class:list={['btn mt-1 w-full', dark && 'hover:bg-white hover:text-dark']}>
-				Pošalji
-			</button>
-		</form>
-	)
-}
+			Hvala na prijavi!
+		</h3>
+		<p class:list={['mt-2', dark ? 'text-white/80' : 'text-muted']}>Javićemo vam se uskoro.</p>
+	</div>
+</div>
+
+<script>
+	import { setupProtectedForm } from './turnstile/protected-form';
+
+	document.querySelectorAll<HTMLElement>('[data-name-form]').forEach((root) => {
+		void setupProtectedForm(root, {
+			validation: 'Provjerite unesene podatke (e-mail je obavezan).',
+		});
+	});
+</script>

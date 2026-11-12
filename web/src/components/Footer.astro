@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import logo from '../assets/images/logo.png';
 import { CONTACT, NAV_LINKS, SITE_TITLE } from '../consts';
-import NameForm from './NameForm.astro';
 import SocialIcons from './SocialIcons.astro';
 
 const heading = 'eyebrow flex items-center gap-2 font-semibold text-muted';
@@ -21,9 +20,6 @@ const copyTooltip =
 				<a href="/" class="inline-block">
 					<Image src={logo} alt={`${SITE_TITLE} logo`} width={56} height={56} class="h-14 w-14" />
 				</a>
-				<h2 class="mt-4 text-2xl font-semibold text-dark">Budite u toku</h2>
-				<p class="mt-2 text-muted">Prijavite se i pratite novosti udruženja.</p>
-				<NameForm class="mt-5 max-w-sm" inline />
 				<SocialIcons
 					class="mt-5 text-primary [&>a]:grid [&>a]:h-9 [&>a]:w-9 [&>a]:place-items-center [&>a]:rounded-full [&>a]:bg-white [&>a]:transition-colors [&>a]:hover:bg-accent [&>a]:hover:text-white [&>a]:hover:opacity-100 [&_svg]:h-4 [&_svg]:w-4"
 				/>

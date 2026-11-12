@@ -5,8 +5,14 @@
 // field validation -> env.EMAIL.send() via Email Routing to the verified destination address.
 
 const SITEVERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-const ALLOWED_ACTIONS = new Set(['contact', 'membership']);
-const SUBJECT_PREFIX: Record<string, string> = { contact: 'Kontakt', membership: 'Članstvo' };
+const ALLOWED_ACTIONS = new Set(['contact', 'membership', 'home']);
+const SUBJECT_PREFIX: Record<string, string> = {
+	contact: 'Kontakt',
+	membership: 'Članstvo',
+	home: 'Prijava (početna)',
+};
+// Sign-up forms send only name + e-mail; the full contact forms require a message.
+const MESSAGE_REQUIRED = new Set(['contact', 'membership']);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const LIMITS = { name: 100, email: 254, message: 5000 };
 
@@ -101,7 +107,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 	if (
 		!EMAIL_RE.test(email) ||
 		email.length > LIMITS.email ||
-		!message ||
+		(MESSAGE_REQUIRED.has(source) && !message) ||
 		message.length > LIMITS.message ||
 		firstName.length > LIMITS.name ||
 		lastName.length > LIMITS.name
@@ -118,25 +124,28 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 	const fullName = [firstName, lastName].filter(Boolean).join(' ');
 	const prefix = SUBJECT_PREFIX[source];
 	// Strip CR/LF so user input can never inject extra headers via the subject.
-	const subject = `[${prefix}] Poruka od ${fullName || email}`.replace(/[\r\n]+/g, ' ');
+	const kind = message ? 'Poruka' : 'Prijava';
+	const subject = `[${prefix}] ${kind} od ${fullName || email}`.replace(/[\r\n]+/g, ' ');
 
 	const text = [
-		`Nova poruka sa web forme (${prefix}).`,
+		`Nova ${kind.toLowerCase()} sa web forme (${prefix}).`,
 		'',
 		`Ime: ${fullName || '-'}`,
 		`E-mail: ${email}`,
-		'',
-		'Poruka:',
-		message,
+		...(message ? ['', 'Poruka:', message] : []),
 	].join('\n');
 
-	const html = `<p>Nova poruka sa web forme (<strong>${escapeHtml(prefix)}</strong>).</p>
+	const html = `<p>Nova ${kind.toLowerCase()} sa web forme (<strong>${escapeHtml(prefix)}</strong>).</p>
 <table cellpadding="4">
 <tr><td><strong>Ime:</strong></td><td>${escapeHtml(fullName || '-')}</td></tr>
 <tr><td><strong>E-mail:</strong></td><td>${escapeHtml(email)}</td></tr>
-</table>
+</table>${
+		message
+			? `
 <p><strong>Poruka:</strong></p>
-<p style="white-space:pre-wrap">${escapeHtml(message)}</p>`;
+<p style="white-space:pre-wrap">${escapeHtml(message)}</p>`
+			: ''
+	}`;
 
 	try {
 		const result = await env.EMAIL.send({
