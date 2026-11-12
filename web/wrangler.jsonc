@@ -2,11 +2,38 @@
   "$schema": "../node_modules/wrangler/config-schema.json",
   "name": "udruzenje-skipera",
   "compatibility_date": "2026-11-10",
-  // Fully static Astro build: Cloudflare serves web/dist as static assets, no Worker code.
+  // Static Astro build served from web/dist. The Worker only runs for requests that match
+  // no static file — i.e. POST /api/contact (contact form -> email via Email Routing).
+  "main": "./worker/index.ts",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
+  // Email Routing: can only send to verified destination addresses. Locked to one recipient.
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "destination_address": "skipperapp@proton.me",
+      "remote": true
+    }
+  ],
+  "vars": {
+    "CONTACT_FROM": "forma@udruzenjeskipera.me",
+    "CONTACT_TO": "skipperapp@proton.me",
+    // Hostnames accepted from Turnstile siteverify. Never add localhost here for production.
+    "TURNSTILE_HOSTNAMES": "udruzenjeskipera.me,www.udruzenjeskipera.me"
+  },
+  // TURNSTILE_SECRET is a secret: set it in the dashboard (Worker > Settings > Variables and Secrets).
+  // Locally, `wrangler dev` reads it from web/.env.
+  "observability": {
+    "enabled": true,
+    "traces": {
+      "enabled": true
+    }
   },
   // Top-level config = production. `wrangler deploy --env staging` deploys a separate Worker.
+  // TODO staging: add send_email + vars (TURNSTILE_HOSTNAMES = staging host) + TURNSTILE_SECRET.
+  // Until then the staging contact form fails closed (no email is sent).
   "env": {
     "staging": {
       "name": "udruzenje-skipera-staging"

@@ -1,18 +1,22 @@
 ---
+import Turnstile from '../turnstile/Turnstile.astro';
+
 interface Props {
-	eyebrow?: string;
 	title?: string;
 	lead?: string;
 	border?: boolean;
+	/** Which page the form is on. Sent to the Worker and used as the Turnstile action. */
+	source?: 'contact' | 'membership';
 }
 
 const {
-	eyebrow = 'Prijava',
 	title = 'Postanite član',
 	lead = 'Pošaljite nam poruku i javićemo vam se sa svim detaljima.',
 	border = true,
+	source = 'membership',
 } = Astro.props;
 
+const card = 'rounded-lg bg-light p-6 shadow-[0_10px_30px_-18px_rgb(44_90_123/0.6)] md:p-8';
 const field =
 	'rounded-md border border-black/15 bg-white px-4 py-3 text-dark placeholder:text-muted/70 focus:border-accent focus:outline-none';
 const label = 'font-heading text-sm font-medium text-dark';
@@ -21,48 +25,191 @@ const label = 'font-heading text-sm font-medium text-dark';
 <section class:list={['bg-white py-16 md:py-24', border && 'border-t border-black/10']}>
 	<div class="container-site max-w-2xl">
 		<div class="text-center">
-			<span class="eyebrow text-primary">{eyebrow}</span>
-			<h2 class="mt-3 text-3xl font-semibold text-dark">{title}</h2>
+			<h2 class="text-3xl font-semibold text-dark">{title}</h2>
 			<p class="mt-3 text-muted">{lead}</p>
 		</div>
 
-		<form
-			class="mt-10 grid gap-5 rounded-lg bg-light p-6 shadow-[0_10px_30px_-18px_rgb(44_90_123/0.6)] sm:grid-cols-2 md:p-8"
-			onsubmit="return false;"
-		>
-			<label class="flex flex-col gap-2">
-				<span class={label}>Ime</span>
-				<input type="text" name="firstName" autocomplete="given-name" placeholder="Vaše ime" class={field} />
-			</label>
-			<label class="flex flex-col gap-2">
-				<span class={label}>Prezime</span>
-				<input
-					type="text"
-					name="lastName"
-					autocomplete="family-name"
-					placeholder="Vaše prezime"
-					class={field}
-				/>
-			</label>
-			<label class="flex flex-col gap-2 sm:col-span-2">
-				<span class={label}>E-mail*</span>
-				<input
-					type="email"
-					name="email"
-					required
-					autocomplete="email"
-					placeholder="ime@primjer.com"
-					class={field}
-				/>
-			</label>
-			<label class="flex flex-col gap-2 sm:col-span-2">
-				<span class={label}>Poruka*</span>
-				<textarea name="message" required rows="5" placeholder="Vaša poruka" class:list={[field, 'resize-y']}
-				></textarea>
-			</label>
-			<button type="submit" class="btn mt-1 w-full sm:col-span-2 sm:w-auto sm:justify-self-start">
-				Pošalji
-			</button>
-		</form>
+		<div class="mt-10" data-contact-form>
+			<form class:list={[card, 'relative grid gap-5 sm:grid-cols-2']} action="/api/contact" method="post">
+				<input type="hidden" name="source" value={source} />
+
+				<!-- Honeypot: hidden from people and screen readers; bots that fill it are ignored. -->
+				<div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+					<label>
+						Website
+						<input type="text" name="website" tabindex="-1" autocomplete="off" />
+					</label>
+				</div>
+
+				<label class="flex flex-col gap-2">
+					<span class={label}>Ime</span>
+					<input
+						type="text"
+						name="firstName"
+						autocomplete="given-name"
+						placeholder="Vaše ime"
+						maxlength="100"
+						class={field}
+					/>
+				</label>
+				<label class="flex flex-col gap-2">
+					<span class={label}>Prezime</span>
+					<input
+						type="text"
+						name="lastName"
+						autocomplete="family-name"
+						placeholder="Vaše prezime"
+						maxlength="100"
+						class={field}
+					/>
+				</label>
+				<label class="flex flex-col gap-2 sm:col-span-2">
+					<span class={label}>E-mail*</span>
+					<input
+						type="email"
+						name="email"
+						required
+						autocomplete="email"
+						placeholder="ime@primjer.com"
+						maxlength="254"
+						class={field}
+					/>
+				</label>
+				<label class="flex flex-col gap-2 sm:col-span-2">
+					<span class={label}>Poruka*</span>
+					<textarea
+						name="message"
+						required
+						rows="5"
+						placeholder="Vaša poruka"
+						maxlength="5000"
+						class:list={[field, 'resize-y']}></textarea>
+				</label>
+
+				<Turnstile action={source} class="sm:col-span-2" />
+
+				<button type="submit" class="btn mt-1 w-full sm:col-span-2 sm:w-auto sm:justify-self-start">
+					Pošalji
+				</button>
+
+				<p class="text-sm empty:hidden sm:col-span-2" role="status" aria-live="polite" data-status></p>
+			</form>
+
+			<!-- Shown in place of the form after a successful submit. -->
+			<div class:list={[card, 'flex flex-col items-center text-center']} hidden data-success>
+				<svg
+					class="h-14 w-14 text-success"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<circle cx="12" cy="12" r="10"></circle>
+					<path d="m8 12 3 3 5-6"></path>
+				</svg>
+				<h3 class="mt-4 text-2xl font-semibold text-dark focus:outline-none" tabindex="-1" data-success-heading>
+					Hvala!
+				</h3>
+				<p class="mt-2 text-muted">Vaša poruka je poslata. Javićemo vam se uskoro.</p>
+				<button type="button" class="btn mt-6" data-send-again>Pošalji novu poruku</button>
+			</div>
+		</div>
 	</div>
 </section>
+
+<script>
+	import { mountTurnstile, type TurnstileWidget } from '../turnstile/turnstile';
+
+	const MESSAGES = {
+		sending: 'Šalje se…',
+		captcha: 'Provjera nije uspjela. Sačekajte trenutak i pokušajte ponovo.',
+		validation: 'Provjerite unesene podatke (e-mail i poruka su obavezni).',
+		error: 'Došlo je do greške. Pokušajte ponovo ili nam pišite direktno na e-mail.',
+	};
+
+	async function setup(root: HTMLElement) {
+		const form = root.querySelector<HTMLFormElement>('form');
+		const container = root.querySelector<HTMLElement>('[data-turnstile]');
+		const status = root.querySelector<HTMLElement>('[data-status]');
+		const button = root.querySelector<HTMLButtonElement>('button[type="submit"]');
+		const success = root.querySelector<HTMLElement>('[data-success]');
+		const successHeading = root.querySelector<HTMLElement>('[data-success-heading]');
+		const sendAgain = root.querySelector<HTMLButtonElement>('[data-send-again]');
+		if (!form || !container || !status || !button || !success || !successHeading || !sendAgain) return;
+
+		const setStatus = (text: string, tone: 'info' | 'error') => {
+			status.textContent = text;
+			status.classList.toggle('text-error', tone === 'error');
+			status.classList.toggle('text-muted', tone === 'info');
+		};
+
+		const showSuccess = () => {
+			form.hidden = true;
+			success.hidden = false;
+			successHeading.focus();
+		};
+
+		sendAgain.addEventListener('click', () => {
+			setStatus('', 'info');
+			success.hidden = true;
+			form.hidden = false;
+			form.querySelector<HTMLElement>('input:not([type="hidden"]):not([tabindex="-1"])')?.focus();
+		});
+
+		let widget: TurnstileWidget | undefined;
+		try {
+			widget = await mountTurnstile(container);
+		} catch {
+			setStatus(MESSAGES.captcha, 'error');
+		}
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			if (!form.reportValidity()) return;
+
+			if (!widget || !widget.getToken()) {
+				setStatus(MESSAGES.captcha, 'error');
+				return;
+			}
+
+			const label = button.textContent;
+			button.disabled = true;
+			button.textContent = MESSAGES.sending;
+			setStatus('', 'info');
+
+			try {
+				const res = await fetch(form.action, {
+					method: 'POST',
+					body: new FormData(form),
+					headers: { Accept: 'application/json' },
+				});
+				const data: { ok?: boolean; error?: string } = await res.json().catch(() => ({}));
+
+				if (res.ok && data.ok) {
+					form.reset();
+					showSuccess();
+				} else if (data.error === 'captcha') {
+					setStatus(MESSAGES.captcha, 'error');
+				} else if (data.error === 'validation') {
+					setStatus(MESSAGES.validation, 'error');
+				} else {
+					setStatus(MESSAGES.error, 'error');
+				}
+			} catch {
+				setStatus(MESSAGES.error, 'error');
+			} finally {
+				// Turnstile tokens are single-use: always get a fresh one for the next attempt.
+				widget.reset();
+				button.disabled = false;
+				button.textContent = label;
+			}
+		});
+	}
+
+	document.querySelectorAll<HTMLElement>('[data-contact-form]').forEach((root) => {
+		void setup(root);
+	});
+</script>
