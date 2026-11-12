@@ -14,6 +14,19 @@ const DEFAULT_MESSAGES: FormMessages = {
 	error: 'Došlo je do greške. Pokušajte ponovo ili nam pišite direktno na e-mail.',
 };
 
+/** Small spinner shown next to the "sending" label; inherits the button's text color. */
+function createSpinner(): SVGSVGElement {
+	const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+	svg.setAttribute('viewBox', '0 0 24 24');
+	svg.setAttribute('fill', 'none');
+	svg.setAttribute('aria-hidden', 'true');
+	svg.setAttribute('class', 'mr-2 h-4 w-4 animate-spin');
+	svg.innerHTML =
+		'<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"/>' +
+		'<path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>';
+	return svg;
+}
+
 /**
  * Wire a Turnstile-protected form inside `root`: mounts the widget, POSTs the form to its
  * `action` via fetch, shows status/success, and resets the single-use token after each attempt.
@@ -69,9 +82,10 @@ export async function setupProtectedForm(root: HTMLElement, messages: Partial<Fo
 			return;
 		}
 
-		const label = button.textContent;
+		const original = [...button.childNodes];
 		button.disabled = true;
-		button.textContent = text.sending;
+		button.setAttribute('aria-busy', 'true');
+		button.replaceChildren(createSpinner(), text.sending);
 		setStatus('', 'info');
 
 		try {
@@ -98,7 +112,8 @@ export async function setupProtectedForm(root: HTMLElement, messages: Partial<Fo
 			// Turnstile tokens are single-use: always get a fresh one for the next attempt.
 			widget.reset();
 			button.disabled = false;
-			button.textContent = label;
+			button.removeAttribute('aria-busy');
+			button.replaceChildren(...original);
 		}
 	});
 }
