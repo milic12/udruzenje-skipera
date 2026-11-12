@@ -17,8 +17,11 @@ const copyTooltip =
 	<div class="bg-light">
 		<div class="container-site grid gap-10 py-16 md:grid-cols-[1.2fr_1fr_1fr]">
 			<div>
-				<a href="/" class="inline-block">
-					<Image src={logo} alt={`${SITE_TITLE} logo`} width={56} height={56} class="h-14 w-14" />
+				<a href="/" class="inline-flex items-center gap-3">
+					<Image src={logo} alt="" width={56} height={56} class="h-14 w-14" />
+					<span class="font-heading text-md leading-tight font-semibold text-dark">
+						Udruženje <span class="text-accent">skipera</span><br />Crne Gore
+					</span>
 				</a>
 				<SocialIcons
 					class="mt-5 text-primary [&>a]:grid [&>a]:h-9 [&>a]:w-9 [&>a]:place-items-center [&>a]:rounded-full [&>a]:bg-white [&>a]:transition-colors [&>a]:hover:bg-accent [&>a]:hover:text-white [&>a]:hover:opacity-100 [&_svg]:h-4 [&_svg]:w-4"
