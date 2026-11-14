@@ -13,13 +13,13 @@
   "send_email": [
     {
       "name": "EMAIL",
-      "destination_address": "skipperapp@proton.me",
+      "destination_address": "udruzenjeskiperacg@gmail.com",
       "remote": true
     }
   ],
   "vars": {
     "CONTACT_FROM": "forma@udruzenjeskipera.me",
-    "CONTACT_TO": "skipperapp@proton.me",
+    "CONTACT_TO": "udruzenjeskiperacg@gmail.com",
     // Hostnames accepted from Turnstile siteverify. Never add localhost here for production.
     "TURNSTILE_HOSTNAMES": "udruzenjeskipera.me,www.udruzenjeskipera.me"
   },

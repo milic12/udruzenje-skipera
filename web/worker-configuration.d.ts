@@ -9,7 +9,7 @@ interface __BaseEnv_Env {
 	TURNSTILE_SECRET: string;
 	EMAIL?: SendEmail;
 	CONTACT_FROM?: "forma@udruzenjeskipera.me";
-	CONTACT_TO?: "skipperapp@proton.me";
+	CONTACT_TO?: "udruzenjeskiperacg@gmail.com";
 	TURNSTILE_HOSTNAMES?: "udruzenjeskipera.me,www.udruzenjeskipera.me";
 }
 declare namespace Cloudflare {
