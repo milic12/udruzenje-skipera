@@ -1,0 +1,12 @@
+---
+interface Props {
+	/** Turnstile action name, verified server-side (e.g. 'contact', 'membership'). */
+	action: string;
+	class?: string;
+}
+
+const { action, class: className } = Astro.props;
+const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY;
+---
+
+<div class={className} data-turnstile data-sitekey={sitekey} data-action={action}></div>
